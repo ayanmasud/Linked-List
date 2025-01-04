@@ -6,31 +6,12 @@
 
 using namespace std;
 
-//vector<Node*> sort(vector<Node*> &current, int size, bool newSort);
-Node* sort(Node* head);
-void print(Node* n);
+Node* add(Node* head, Node* current, Node* added);
+void print(Node* next);
+Node* del(Node* head, Node* current, int id);
 
 int main() {
-  /*Student* ayan = new Student(); // create student 1
-  strcpy(ayan->name, "Ayan"); // set student 1 name
 
-  Student* ehan = new Student(); // create student 2
-  strcpy(ehan->name, "Ehan"); // set student 2 name
-  
-  Node* head = new Node(ayan); // first node carries student 1
-  Node* head2 = new Node(ehan); // second node carries student 2
-  
-  head->setNext(head2); // next node in first node is second node
-  
-  cout << head->getNext()->getStudent()->name << endl; // obtain the name of student 2 using the first node
-
-  head->~Node();
-  head2->~Node();
-
-  cout << "Didn't abort";*/
-
-  cout << "a";
-  
   Student* s1 = new Student();
   s1->id = 5;
   Student* s2 = new Student();
@@ -39,119 +20,80 @@ int main() {
   s3->id = 2;
   Student* s4 = new Student();
   s4->id = 7;
-
+  Student* s5 = new Student();
+  s5->id = 9;
+  Student* s6 = new Student();
+  s6->id = 1;
+  
   Node* head1 = new Node(s1);
   Node* head2 = new Node(s2);
   Node* head3 = new Node(s3);
   Node* head4 = new Node(s4);
-
-  head1->setNext(head2);
-  head2->setNext(head3);
-  head3->setNext(head4);
-
-  vector<Node*> list;
-  list.push_back(head1);
-  list.push_back(head2);
-  list.push_back(head3);
-  list.push_back(head4);
-
-
-  cout << endl;
-
+  Node* head5 = new Node(s5);
+  Node* head6 = new Node(s6);
+  
+  head1 = add(head1, head1, head2);
+  head1 = add(head1, head1, head3);
+  head1 = add(head1, head1, head4);
+  head1 = add(head1, head1, head5);
+  head1 = add(head1, head1, head6);
+  
   print(head1);
-  
-  cout << endl << "1";
 
-  
-  Node* newHead = sort(head1);
-  cout << "2" << endl;
+  head1 = del(head1, head1, 5);
 
-  print(newHead);
-  
   cout << endl;
+  print(head1);
   
   return 0;
 }
 
-Node* sort(Node* head) {
-  Node* newHead = nullptr;  // New sorted linked list head
-  Node* current = nullptr; // Pointer to traverse the original list
-
-  while (head != nullptr) {
-    Node* prevMax = nullptr;
-    Node* maxNode = head;
-    Node* prev = nullptr;
-    current = head;
-
-    // Find the node with the largest id in the list
-    while (current->getNext() != nullptr) {
-      if (current->getNext()->getStudent()->id > maxNode->getStudent()->id) {
-        prevMax = current;
-        maxNode = current->getNext();
-      }
-      current = current->getNext();
+Node* add(Node* head, Node* current, Node* added) { // add a node to the linked list
+  if (added->getStudent()->id > current->getStudent()->id) { // if the new node is bigger than the current
+    if (current->getNext() == NULL) {
+      current->setNext(added);
+      return head;
     }
-
-    // Remove maxNode from the original list
-    if (prevMax != nullptr) {
-      prevMax->setNext(maxNode->getNext());
-    } else {
-      head = head->getNext();
+    else if (added->getStudent()->id < current->getNext()->getStudent()->id) { // if the new node is less than than the currents next node. this is where the new node belongs
+      added->setNext(current->getNext());
+      current->setNext(added);
+      return head;
     }
-
-    // Insert maxNode at the start of the new sorted list
-    maxNode->setNext(newHead);
-    newHead = maxNode;
+    else { // new node is greater than currents next so we need to go deeper into the linked list to find its spot
+      add(head, current->getNext(), added); // recursion
+    }
+  } // new node is less than current so it becomes the new head
+  else {
+    added->setNext(head);
+    return added;
   }
-
-  return newHead;
+  return head;
 }
 
-/*vector<Node*> newlist;
-vector<Node*> sort(vector<Node*> &current, int size, bool newSort) {
-  vector<Node*> changelist = current;
-  cout << "in";
-  if (newSort == true) {
-    newSort = false;
-    newlist.clear();
-    sort(changelist, size, false);
+void print(Node* next) { // print the linked list
+  if(next != NULL) {
+    cout << next->getStudent()->id << " ";
+    print(next->getNext());
   }
-  else if (size != 0) {
-    vector<Node*>::iterator it;
-    int smallest = 100;
-    Student* carrying = new Student();
-    Node* carryingNode = new Node(carrying);
-    
-    for (it = changelist.begin(); it < changelist.end(); it++) {
-      if ((*it)->getStudent()->id < smallest) {
-	smallest = (*it)->getStudent()->id;
-	carrying = (*it)->getStudent();
-	carryingNode = (*it);
-      }
-      
-    }
-    cout << "small:" << smallest;
-    newlist.push_back(carryingNode);
-
-    for (it = changelist.begin(); it < changelist.end(); it++) { // remove that one we pushed into newlist from current
-      if ((*it)->getStudent()->id == smallest) {
-	cout << "erased" << (*it)->getStudent()->id;
-	(*it)->~Node();
-	changelist.erase(it);
-      }
-    }
-
-    size-=1;
-    size-=1;
-    sort(current, size, false); // this is giving problems, might have something to do with the vector size in the if statment. maybe use an index number to keep track instead
-  }
-  
-  return newlist;
 }
-*/
-void print(Node* n) {
-  if (n->getNext() != NULL) {
-    print(n->getNext());
+
+Node* newNext = NULL;
+Node* del(Node* head, Node* current, int id) {
+  if (current->getStudent()->id == id) { // if the head is the one to delete
+    current = current->getNext();
+    head->~Node();
+    return current;
   }
-  cout << n->getStudent()->id;
+  else {
+    if (current->getNext()->getStudent()->id == id) { // currents next is the one to delete
+      newNext = current->getNext()->getNext(); // stores the new next node
+      current->getNext()->~Node(); // delete the node to be deleted
+      current->setNext(newNext); // fix the linked list order
+      return head;
+    }
+    else { // keep going through the linked list until you find it
+      del(head, current->getNext(), id); // recursion
+    }
+  }
+  return head;
 }
