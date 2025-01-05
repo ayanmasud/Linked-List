@@ -7,6 +7,7 @@
 using namespace std;
 
 Node::Node(Student* newstudent) { // assign the student this node is carrying in the constructor
+  next = NULL;
   student = newstudent;
 }
 Node* Node::getNext() { // get the next node
@@ -19,7 +20,7 @@ Student* Node::getStudent() { // get the student
   return student;
 }
 Node::~Node() { // destructor
-  delete next;
+  next = NULL;
   delete student;
 }
 

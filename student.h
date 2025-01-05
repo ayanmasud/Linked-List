@@ -5,8 +5,10 @@ using namespace std;
 
 class Student {
  public:
-  char name[80];
+  char fname[20];
+  char lname[20];
   int id;
+  float gpa;
 
   Student();
   ~Student();
