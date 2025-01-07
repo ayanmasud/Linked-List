@@ -6,6 +6,8 @@
 
 using namespace std;
 
+// student constructor and destructor
+
 Student::Student() {
   
 }

@@ -6,6 +6,8 @@
 
 using namespace std;
 
+// allows us to access properties of the node using functions
+
 Node::Node(Student* newstudent) { // assign the student this node is carrying in the constructor
   next = NULL;
   student = newstudent;
@@ -20,8 +22,8 @@ Student* Node::getStudent() { // get the student
   return student;
 }
 Node::~Node() { // destructor
-  next = NULL;
   delete student;
+  next = NULL;
 }
 
 #endif

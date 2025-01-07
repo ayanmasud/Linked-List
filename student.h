@@ -3,6 +3,8 @@
 
 using namespace std;
 
+// all the variables and functions that student has stored in it
+
 class Student {
  public:
   char fname[20];
